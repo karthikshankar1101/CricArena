@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CricArena.API/CricArena.API.csproj" />
+  <Project Path="CricArena.Application/CricArena.Application.csproj" />
+  <Project Path="CricArena.Domain/CricArena.Domain.csproj" />
+  <Project Path="CricArena.Infrastructure/CricArena.Infrastructure.csproj" />
+</Solution>

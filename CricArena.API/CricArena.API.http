@@ -1,0 +1,6 @@
+@CricArena.API_HostAddress = http://localhost:5042
+
+GET {{CricArena.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
