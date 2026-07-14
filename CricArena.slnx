@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
   <Project Path="CricArena.API/CricArena.API.csproj" />
   <Project Path="CricArena.Application/CricArena.Application.csproj" />
   <Project Path="CricArena.Domain/CricArena.Domain.csproj" />
