@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CricArena.Core\CricArena.Core.csproj" />
+    <ProjectReference Include="..\CricArena.Data\CricArena.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
+</Project>
