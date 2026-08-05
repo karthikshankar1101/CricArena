@@ -11,10 +11,4 @@
     <ProjectReference Include="..\CricArena.Data\CricArena.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="DTOs\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>

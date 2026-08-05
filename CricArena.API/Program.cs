@@ -1,4 +1,8 @@
+using CricArena.Business.Services;
+using CricArena.Business.Services.Interfaces;
 using CricArena.Data.Context;
+using CricArena.Data.Repositories;
+using CricArena.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +19,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DbConnectionString"));
 });
 
+
+//Services registration
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+
+//Repository registration
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,5 +41,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();
