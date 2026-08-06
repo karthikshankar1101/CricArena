@@ -136,7 +136,7 @@ namespace CricArena.Business.Services
 
         private static void ValidateUpdatePlayerRequest(UpdatePlayerRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.FullName))
+            if (string.IsNullOrWhiteSpace(request.Name))
                 throw new ArgumentException("Full Name is required.");
 
             if (string.IsNullOrWhiteSpace(request.PhoneNumber))
