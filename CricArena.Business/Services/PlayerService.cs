@@ -1,8 +1,10 @@
 ﻿using CricArena.Business.DTOs.Player;
+using CricArena.Business.Exceptions;
 using CricArena.Business.Services.Interfaces;
 using CricArena.Core.Entities;
 using CricArena.Data.Context;
 using CricArena.Data.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,16 +15,29 @@ namespace CricArena.Business.Services
     {
         private readonly IPlayerRepository _playerRepository;
         private readonly AppDbContext _dbContext;
-        public PlayerService(IPlayerRepository playerRepository, AppDbContext dbContext)
+        private readonly ILogger<PlayerService> _logger;
+        public PlayerService(IPlayerRepository playerRepository, AppDbContext dbContext, ILogger<PlayerService> logger)
         {
             _playerRepository = playerRepository;
             _dbContext = dbContext;
+            _logger = logger;
         }
         public async Task<PlayerResponse> CreatePlayerAsync(CreatePlayerRequest request)
         {
+            _logger.LogInformation(
+                "Creating player with email {Email}",
+                request.Email);
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                throw new ArgumentException(
+                    "Full Name is required.");
+            }
             if (await _playerRepository.EmailExistsAsync(request.Email))
             {
-                throw new Exception("Email already exists.");
+                _logger.LogWarning(
+                    "Duplicate email {Email}",
+                    request.Email);
+                throw new DuplicateEmailException(request.Email);
             }
 
             var player = new Player
@@ -32,9 +47,13 @@ namespace CricArena.Business.Services
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber
             };
-
+            
             await _playerRepository.AddAsync(player);
             await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Player created successfully. Id {Id}",
+                player.Id);
 
             return new PlayerResponse
             {
@@ -50,9 +69,12 @@ namespace CricArena.Business.Services
             var player = await _playerRepository.GetByIdAsync(Id);
             if (player == null)
             {
-                throw new Exception("Player does not exist.");
+                throw new PlayerNotFoundException(Id);
             }
             await _playerRepository.DeleteAsync(player);
+            _logger.LogInformation(
+                "Player deleted successfully. Id {Id}",
+                player.Id);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -73,7 +95,7 @@ namespace CricArena.Business.Services
             var player = await _playerRepository.GetByIdAsync(Id);
             if (player == null)
             {
-                throw new Exception("Player does not exist.");
+                throw new PlayerNotFoundException(Id);
             }
 
             return new PlayerResponse
@@ -90,11 +112,19 @@ namespace CricArena.Business.Services
             var player = await _playerRepository.GetByIdAsync(Id);
             if (player == null)
             {
-                throw new Exception("Player does not exist.");
+                throw new PlayerNotFoundException(Id);
+            }
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                throw new ArgumentException(
+                    "Full Name is required.");
             }
             player.Name = request.Name ?? player.Name;
             player.PhoneNumber = request.PhoneNumber ?? player.PhoneNumber;
 
+            _logger.LogInformation(
+                "Updating player. Id {Id}",
+                player.Id);
             await _playerRepository.UpdateAsync(player);
             await _dbContext.SaveChangesAsync();
         }

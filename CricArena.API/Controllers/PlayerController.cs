@@ -53,9 +53,6 @@ namespace CricArena.API.Controllers
         {
             var player = await _playerService.GetPlayerByIdAsync(id);
 
-            if (player == null)
-                return NotFound($"Player with Id '{id}' was not found.");
-
             return Ok(player);
         }
 
@@ -71,9 +68,6 @@ namespace CricArena.API.Controllers
         {
             var player = await _playerService.GetPlayerByIdAsync(id);
 
-            if (player == null)
-                return NotFound($"Player with Id '{id}' was not found.");
-
             await _playerService.UpdatePlayerAsync(id, request);
 
             return NoContent();
@@ -88,9 +82,6 @@ namespace CricArena.API.Controllers
         public async Task<IActionResult> DeletePlayer(Guid id)
         {
             var player = await _playerService.GetPlayerByIdAsync(id);
-
-            if (player == null)
-                return NotFound($"Player with Id '{id}' was not found.");
 
             await _playerService.DeletePlayerAsync(id);
 
