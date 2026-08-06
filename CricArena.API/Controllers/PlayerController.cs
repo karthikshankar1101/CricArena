@@ -19,8 +19,6 @@ namespace CricArena.API.Controllers
         /// Creates a new player.
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(PlayerResponse), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PlayerResponse>> CreatePlayer(CreatePlayerRequest request)
         {
             var player = await _playerService.CreatePlayerAsync(request);

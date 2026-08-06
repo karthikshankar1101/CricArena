@@ -27,11 +27,7 @@ namespace CricArena.Business.Services
             _logger.LogInformation(
                 "Creating player with email {Email}",
                 request.Email);
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new ArgumentException(
-                    "Full Name is required.");
-            }
+            ValidateCreatePlayerRequest(request);
             if (await _playerRepository.EmailExistsAsync(request.Email))
             {
                 _logger.LogWarning(
@@ -39,7 +35,7 @@ namespace CricArena.Business.Services
                     request.Email);
                 throw new DuplicateEmailException(request.Email);
             }
-
+            request.Email = request.Email.Trim().ToLowerInvariant();
             var player = new Player
             {
                 Id = Guid.NewGuid(),
@@ -47,7 +43,7 @@ namespace CricArena.Business.Services
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber
             };
-            
+
             await _playerRepository.AddAsync(player);
             await _dbContext.SaveChangesAsync();
 
@@ -55,13 +51,7 @@ namespace CricArena.Business.Services
                 "Player created successfully. Id {Id}",
                 player.Id);
 
-            return new PlayerResponse
-            {
-                Id = player.Id,
-                Name = player.Name,
-                Email = player.Email,
-                PhoneNumber = player.PhoneNumber
-            };
+            return MapToPlayerResponse(player);
         }
 
         public async Task DeletePlayerAsync(Guid Id)
@@ -81,13 +71,9 @@ namespace CricArena.Business.Services
         public async Task<List<PlayerResponse>> GetAllPlayersAsync()
         {
             var players = await _playerRepository.GetAllAsync();
-            return players.Select(player => new PlayerResponse
-            {
-                Id = player.Id,
-                Name = player.Name,
-                Email = player.Email,
-                PhoneNumber = player.PhoneNumber
-            }).ToList();
+            return players
+                .Select(MapToPlayerResponse)
+                .ToList();
         }
 
         public async Task<PlayerResponse?> GetPlayerByIdAsync(Guid Id)
@@ -114,11 +100,7 @@ namespace CricArena.Business.Services
             {
                 throw new PlayerNotFoundException(Id);
             }
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                throw new ArgumentException(
-                    "Full Name is required.");
-            }
+            ValidateUpdatePlayerRequest(request);
             player.Name = request.Name ?? player.Name;
             player.PhoneNumber = request.PhoneNumber ?? player.PhoneNumber;
 
@@ -127,6 +109,38 @@ namespace CricArena.Business.Services
                 player.Id);
             await _playerRepository.UpdateAsync(player);
             await _dbContext.SaveChangesAsync();
+        }
+
+        private static PlayerResponse MapToPlayerResponse(Player player)
+        {
+            return new PlayerResponse
+            {
+                Id = player.Id,
+                Name = player.Name,
+                Email = player.Email,
+                PhoneNumber = player.PhoneNumber
+            };
+        }
+
+        private static void ValidateCreatePlayerRequest(CreatePlayerRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Name))
+                throw new ArgumentException("Full Name is required.");
+
+            if (string.IsNullOrWhiteSpace(request.Email))
+                throw new ArgumentException("Email is required.");
+
+            if (string.IsNullOrWhiteSpace(request.PhoneNumber))
+                throw new ArgumentException("Phone Number is required.");
+        }
+
+        private static void ValidateUpdatePlayerRequest(UpdatePlayerRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.FullName))
+                throw new ArgumentException("Full Name is required.");
+
+            if (string.IsNullOrWhiteSpace(request.PhoneNumber))
+                throw new ArgumentException("Phone Number is required.");
         }
     }
 }

@@ -1,3 +1,4 @@
+using CricArena.API.Middleware;
 using CricArena.Business.Services;
 using CricArena.Business.Services.Interfaces;
 using CricArena.Data.Context;
@@ -37,6 +38,8 @@ app.MapOpenApi();
 app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
 
