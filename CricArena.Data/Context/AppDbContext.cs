@@ -21,6 +21,7 @@ namespace CricArena.Data.Context
         public DbSet<Match> Matches { get; set; }
         public DbSet<MatchAvailability> MatchAvailabilities { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,6 +36,10 @@ namespace CricArena.Data.Context
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasPrecision(10, 2);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }
     }
 }

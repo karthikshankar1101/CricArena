@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.11" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CricArena.Core\CricArena.Core.csproj" />
     <ProjectReference Include="..\CricArena.Data\CricArena.Data.csproj" />
   </ItemGroup>
