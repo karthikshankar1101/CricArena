@@ -71,6 +71,7 @@ namespace CricArena.API.Controllers
         /// Deletes a player.
         /// </summary>
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeletePlayer(Guid id)
         {
             var player = await _playerService.GetPlayerByIdAsync(id);

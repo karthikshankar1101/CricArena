@@ -44,6 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme) //Add
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();  //This is required to access the current user information in the services layer
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();  //This is required to access the current user information in the services layer
 
 //Services registration
 builder.Services.AddScoped<IPlayerService, PlayerService>();
