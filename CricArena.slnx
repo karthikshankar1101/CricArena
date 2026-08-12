@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="AGENTS.md" />
+  </Folder>
   <Project Path="CricArena.API/CricArena.API.csproj" />
   <Project Path="CricArena.Business/CricArena.Business.csproj" />
   <Project Path="CricArena.Core/CricArena.Core.csproj" />
