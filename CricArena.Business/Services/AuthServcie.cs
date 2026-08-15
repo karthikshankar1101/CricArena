@@ -42,6 +42,16 @@ namespace CricArena.Business.Services
                 throw new ArgumentException("Password is required.");
             }
 
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                throw new ArgumentException("Name is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(request.PhoneNumber))
+            {
+                throw new ArgumentException("Phone number is required.");
+            }
+
             if (await _userRepository.EmailExistsAsync(email))
             {
                 throw new InvalidOperationException(
@@ -59,6 +69,19 @@ namespace CricArena.Business.Services
 
             user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
             await _userRepository.AddAsync(user);
+
+            var player = new Player
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                Name = request.Name.Trim(),
+                Email = email,
+                PhoneNumber = request.PhoneNumber.Trim(),
+                IsActive = true,
+                CreatedOn = DateTime.UtcNow
+            };
+
+            await _context.Players.AddAsync(player);
             await _context.SaveChangesAsync();
         }
 

@@ -40,6 +40,13 @@ namespace CricArena.Data.Context
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Player)
+                .WithOne(p => p.User)
+                .HasForeignKey<Player>(p => p.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -13,5 +13,6 @@ namespace CricArena.Core.Entities
         public ClubRole Role { get; set; } = ClubRole.Player;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
+        public Player? Player { get; set; }
     }
 }

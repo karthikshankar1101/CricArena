@@ -3,6 +3,8 @@
     public class Player
     {
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; } = null!;
         public required string Name { get; set; }
         public required string Email { get; set; }
         public required string PhoneNumber { get; set; }
