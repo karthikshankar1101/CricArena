@@ -71,6 +71,10 @@ public class ExceptionMiddleware
 
                 break;
 
+            case InvalidOperationException:
+                context.Response.StatusCode = 400;
+                break;
+
             default:
 
                 context.Response.StatusCode = 500;

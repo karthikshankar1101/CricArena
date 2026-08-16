@@ -24,6 +24,10 @@
     {
       "key": "memberPlayerId",
       "value": ""
+    },
+    {
+      "key": "joinRequestId",
+      "value": ""
     }
   ],
   "auth": {
@@ -399,6 +403,141 @@
                 "api",
                 "Club",
                 "{{clubId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "JoinRequest",
+      "item": [
+        {
+          "name": "Create Join Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) {",
+                  "    pm.collectionVariables.set('joinRequestId', json.id);",
+                  "    pm.environment.set('joinRequestId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clubId\": \"{{clubId}}\",\n  \"message\": \"I want to join this club\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/JoinRequest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "JoinRequest"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Club Join Requests",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/JoinRequest/club/{{clubId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "JoinRequest",
+                "club",
+                "{{clubId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Join Request By Id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/JoinRequest/{{joinRequestId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "JoinRequest",
+                "{{joinRequestId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve Join Request (ClubAdmin/Captain)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/JoinRequest/{{joinRequestId}}/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "JoinRequest",
+                "{{joinRequestId}}",
+                "approve"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Join Request (ClubAdmin/Captain)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/JoinRequest/{{joinRequestId}}/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "JoinRequest",
+                "{{joinRequestId}}",
+                "reject"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Join Request",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/JoinRequest/{{joinRequestId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "JoinRequest",
+                "{{joinRequestId}}",
+                "cancel"
               ]
             }
           }
