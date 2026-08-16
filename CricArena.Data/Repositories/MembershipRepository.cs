@@ -1,5 +1,6 @@
 ﻿using CricArena.Core.Entities;
 using CricArena.Data.Context;
+using CricArena.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace CricArena.Data.Repositories
 {
-    public class MembershipRepository
+    public class MembershipRepository : IMembershipRepository
     {
         private readonly AppDbContext _context;
 

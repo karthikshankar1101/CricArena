@@ -21,5 +21,10 @@ namespace CricArena.Data.Repositories
         {
             return await _dbSet.AnyAsync(p => p.Email == email);
         }
+
+        public async Task<Player?> GetPlayerByUserIdAsync(Guid userId)
+        {
+            return await _dbSet.FirstOrDefaultAsync(p => p.UserId == userId);
+        }
     }
 }

@@ -1,0 +1,409 @@
+{
+  "info": {
+    "name": "CricArena API",
+    "description": "Local API requests for CricArena. Import this collection into Postman and select the CricArena Local environment.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:7019"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "playerId",
+      "value": ""
+    },
+    {
+      "key": "clubId",
+      "value": ""
+    },
+    {
+      "key": "memberPlayerId",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Player\",\n  \"email\": \"test.player@example.com\",\n  \"phoneNumber\": \"9876543210\",\n  \"password\": \"TestPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    pm.environment.set('token', json.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test.player@example.com\",\n  \"password\": \"TestPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Players",
+      "item": [
+        {
+          "name": "Create Player",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) {",
+                  "    pm.collectionVariables.set('playerId', json.id);",
+                  "    pm.environment.set('playerId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Another Player\",\n  \"email\": \"another.player@example.com\",\n  \"phoneNumber\": \"9123456780\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Player",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Player"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Players",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/Player",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Player"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Player By Id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/Player/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Player",
+                "{{playerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Player",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Player\",\n  \"phoneNumber\": \"9000000000\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Player/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Player",
+                "{{playerId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Player (Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/Player/{{playerId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Player",
+                "{{playerId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Clubs",
+      "item": [
+        {
+          "name": "Create Club",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.id) {",
+                  "    pm.collectionVariables.set('clubId', json.id);",
+                  "    pm.environment.set('clubId', json.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Cricket Club\",\n  \"description\": \"Club created from Postman\",\n  \"location\": \"Bengaluru\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Club",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Club"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Clubs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/Club",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Club"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Club By Id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/Club/{{clubId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Club",
+                "{{clubId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Club (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Cricket Club\",\n  \"description\": \"Updated from Postman\",\n  \"location\": \"Bengaluru\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Club/{{clubId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Club",
+                "{{clubId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Club Members",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/Club/{{clubId}}/members",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Club",
+                "{{clubId}}",
+                "members"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Member Role (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Club/{{clubId}}/members/{{memberPlayerId}}/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Club",
+                "{{clubId}}",
+                "members",
+                "{{memberPlayerId}}",
+                "role"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Club (Admin)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/Club/{{clubId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Club",
+                "{{clubId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

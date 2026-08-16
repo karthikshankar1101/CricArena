@@ -51,6 +51,10 @@ public class ExceptionMiddleware
 
             case PlayerNotFoundException:
 
+            case ClubNotFoundException:
+
+            case MembershipNotFoundException:
+
                 context.Response.StatusCode = 404;
 
                 break;
@@ -58,6 +62,12 @@ public class ExceptionMiddleware
             case ArgumentException:
 
                 context.Response.StatusCode = 400;
+
+                break;
+
+            case UnauthorizedAccessException:
+
+                context.Response.StatusCode = 403;
 
                 break;
 

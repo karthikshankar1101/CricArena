@@ -50,11 +50,14 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();  //This i
 //Services registration
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IClubService, ClubService>();
 
 //Repository registration
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IClubRepository, ClubRepository>();
+builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
 
 
 

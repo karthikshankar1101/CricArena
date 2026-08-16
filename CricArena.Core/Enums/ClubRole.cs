@@ -4,6 +4,7 @@
     {
         Player = 1,
         Captain = 2,
-        Admin = 3
+        Admin = 3,
+        ClubAdmin = 4,
     }
 }
