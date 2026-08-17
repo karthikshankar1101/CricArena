@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CricArena.Core.Enums;
 
 namespace CricArena.Core.Entities
 {
@@ -10,8 +11,8 @@ namespace CricArena.Core.Entities
         public Guid PlayerId { get; set; }
         public Guid ClubId { get; set; }
         public DateTime SentOn { get; set; } = DateTime.UtcNow;
-        public bool IsAccepted { get; set; }
-        public DateTime? RepondedOn { get; set; }
+        public InvitationStatus Status { get; set; } = InvitationStatus.Pending;
+        public DateTime? RespondedOn { get; set; }
 
         // Navigation Properties (for EF Core)
         public Player Player { get; set; } = null!;

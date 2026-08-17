@@ -1,4 +1,5 @@
 ﻿using CricArena.Business.DTOs.Auth;
+using CricArena.Business.Exceptions;
 using CricArena.Business.Services.Interfaces;
 using CricArena.Core.Entities;
 using CricArena.Core.Enums;
@@ -19,13 +20,19 @@ namespace CricArena.Business.Services
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly PasswordHasher<User> _passwordHasher;
+        private readonly IPlayerRepository _playerRepository;
 
-        public AuthService(IUserRepository userRepository, AppDbContext context, IConfiguration configuration)
+        public AuthService(
+            IUserRepository userRepository,
+            AppDbContext context,
+            IConfiguration configuration,
+            IPlayerRepository playerRepository)
         {
             _userRepository = userRepository;
             _context = context;
             _configuration = configuration;
             _passwordHasher = new PasswordHasher<User>();
+            _playerRepository = playerRepository;
         }
 
         public async Task RegisterAsync(RegisterRequest request)
@@ -58,6 +65,12 @@ namespace CricArena.Business.Services
                     "A user with this email already exists.");
             }
 
+            var phoneNumber = request.PhoneNumber.Trim();
+            if (await _playerRepository.PhoneNumberExistsAsync(phoneNumber))
+            {
+                throw new DuplicatePhoneNumberException(phoneNumber);
+            }
+
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -76,7 +89,7 @@ namespace CricArena.Business.Services
                 UserId = user.Id,
                 Name = request.Name.Trim(),
                 Email = email,
-                PhoneNumber = request.PhoneNumber.Trim(),
+                PhoneNumber = phoneNumber,
                 IsActive = true,
                 CreatedOn = DateTime.UtcNow
             };

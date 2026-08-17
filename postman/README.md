@@ -14,6 +14,7 @@ Select **CricArena Local** as the active environment. The collection uses `{{bas
 3. Run the Player requests as needed.
 4. Run **Clubs → Create Club**. Its test script stores the response ID in `{{clubId}}`.
 5. Set `{{memberPlayerId}}` manually before testing member role changes.
+6. Use **Invitation → Search Player By Phone** as a ClubAdmin/Captain, then set the selected ID as `{{invitedPlayerId}}` before creating an invitation. Log in as the invited player to accept or reject it.
 
 All protected requests inherit bearer authentication from the collection. Requests that require elevated permissions are labelled `(Admin)`.
 

@@ -28,6 +28,14 @@
     {
       "key": "joinRequestId",
       "value": ""
+    },
+    {
+      "key": "invitationId",
+      "value": ""
+    },
+    {
+      "key": "invitedPlayerId",
+      "value": ""
     }
   ],
   "auth": {
@@ -540,6 +548,87 @@
                 "cancel"
               ]
             }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Invitation",
+      "item": [
+        {
+          "name": "Search Player By Phone (ClubAdmin/Captain)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/Invitation/club/{{clubId}}/players/search?phoneNumber=9876543210",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "Invitation", "club", "{{clubId}}", "players", "search"],
+              "query": [{ "key": "phoneNumber", "value": "9876543210" }]
+            }
+          }
+        },
+        {
+          "name": "Create Invitation (ClubAdmin/Captain)",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "const json = pm.response.json();",
+                "if (json.id) {",
+                "    pm.collectionVariables.set('invitationId', json.id);",
+                "    pm.environment.set('invitationId', json.id);",
+                "}"
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"clubId\": \"{{clubId}}\",\n  \"playerId\": \"{{invitedPlayerId}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/Invitation", "host": ["{{baseUrl}}"], "path": ["api", "Invitation"] }
+          }
+        },
+        {
+          "name": "Get Club Invitations (ClubAdmin/Captain)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/Invitation/club/{{clubId}}", "host": ["{{baseUrl}}"], "path": ["api", "Invitation", "club", "{{clubId}}"] }
+          }
+        },
+        {
+          "name": "Get My Invitations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/Invitation/mine", "host": ["{{baseUrl}}"], "path": ["api", "Invitation", "mine"] }
+          }
+        },
+        {
+          "name": "Get Invitation By Id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/Invitation/{{invitationId}}", "host": ["{{baseUrl}}"], "path": ["api", "Invitation", "{{invitationId}}"] }
+          }
+        },
+        {
+          "name": "Accept Invitation (Invited Player)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/Invitation/{{invitationId}}/accept", "host": ["{{baseUrl}}"], "path": ["api", "Invitation", "{{invitationId}}", "accept"] }
+          }
+        },
+        {
+          "name": "Reject Invitation (Invited Player)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/Invitation/{{invitationId}}/reject", "host": ["{{baseUrl}}"], "path": ["api", "Invitation", "{{invitationId}}", "reject"] }
+          }
+        },
+        {
+          "name": "Cancel Invitation (ClubAdmin/Captain)",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{baseUrl}}/api/Invitation/{{invitationId}}/cancel", "host": ["{{baseUrl}}"], "path": ["api", "Invitation", "{{invitationId}}", "cancel"] }
           }
         }
       ]

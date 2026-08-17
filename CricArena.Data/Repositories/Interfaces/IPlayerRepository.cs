@@ -9,6 +9,8 @@ namespace CricArena.Data.Repositories.Interfaces
     {
         Task<Player?> GetByEmailAsync(string email);
         Task<bool> EmailExistsAsync(string email);
+        Task<List<Player>> GetByPhoneNumberAsync(string phoneNumber);
+        Task<bool> PhoneNumberExistsAsync(string phoneNumber, Guid? excludedPlayerId = null);
         Task<Player?> GetPlayerByUserIdAsync(Guid userId);
     }
 }

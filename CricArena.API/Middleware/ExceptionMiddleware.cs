@@ -45,6 +45,8 @@ public class ExceptionMiddleware
         {
             case DuplicateEmailException duplicateEmail:
 
+            case DuplicatePhoneNumberException:
+
                 context.Response.StatusCode = 409;
 
                 break;
@@ -54,6 +56,8 @@ public class ExceptionMiddleware
             case ClubNotFoundException:
 
             case MembershipNotFoundException:
+
+            case InvitationNotFoundException:
 
                 context.Response.StatusCode = 404;
 

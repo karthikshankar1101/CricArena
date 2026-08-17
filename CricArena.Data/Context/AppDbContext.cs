@@ -41,6 +41,10 @@ namespace CricArena.Data.Context
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
+            modelBuilder.Entity<Player>()
+                .HasIndex(p => p.PhoneNumber)
+                .IsUnique();
+
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Player)
                 .WithOne(p => p.User)

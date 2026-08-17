@@ -35,13 +35,17 @@ namespace CricArena.Business.Services
                     request.Email);
                 throw new DuplicateEmailException(request.Email);
             }
+            if (await _playerRepository.PhoneNumberExistsAsync(request.PhoneNumber.Trim()))
+            {
+                throw new DuplicatePhoneNumberException(request.PhoneNumber.Trim());
+            }
             request.Email = request.Email.Trim().ToLowerInvariant();
             var player = new Player
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 Email = request.Email,
-                PhoneNumber = request.PhoneNumber
+                PhoneNumber = request.PhoneNumber.Trim()
             };
 
             await _playerRepository.AddAsync(player);
@@ -101,8 +105,13 @@ namespace CricArena.Business.Services
                 throw new PlayerNotFoundException(Id);
             }
             ValidateUpdatePlayerRequest(request);
+            var phoneNumber = request.PhoneNumber!.Trim();
+            if (await _playerRepository.PhoneNumberExistsAsync(phoneNumber, player.Id))
+            {
+                throw new DuplicatePhoneNumberException(phoneNumber);
+            }
             player.Name = request.Name ?? player.Name;
-            player.PhoneNumber = request.PhoneNumber ?? player.PhoneNumber;
+            player.PhoneNumber = phoneNumber;
 
             _logger.LogInformation(
                 "Updating player. Id {Id}",
