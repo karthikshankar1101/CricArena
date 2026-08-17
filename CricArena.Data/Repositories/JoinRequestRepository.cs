@@ -34,6 +34,15 @@ namespace CricArena.Data.Repositories
                 .FirstOrDefaultAsync(x => x.ClubId == clubId && x.PlayerId == playerId);
         }
 
+        public async Task<JoinRequest?> GetPendingByClubIdAndPlayerIdAsync(Guid clubId, Guid playerId)
+        {
+            return await _context.JoinRequests
+                .FirstOrDefaultAsync(x =>
+                    x.ClubId == clubId &&
+                    x.PlayerId == playerId &&
+                    x.Status == CricArena.Core.Enums.MembershipStatus.Pending);
+        }
+
         public async Task<List<JoinRequest>> GetByClubIdAsync(Guid clubId)
         {
             return await _context.JoinRequests

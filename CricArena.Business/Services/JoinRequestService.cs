@@ -21,6 +21,7 @@ namespace CricArena.Business.Services
         private readonly ICurrentUserService _currentUserService;
         private readonly IPlayerRepository _playerRepository;
         private readonly IMembershipRepository _membershipRepository;
+        private readonly IClubRepository _clubRepository;
 
         public JoinRequestService(
             IJoinRequestRepository joinRequestRepository,
@@ -28,7 +29,8 @@ namespace CricArena.Business.Services
             ILogger<JoinRequestService> logger,
             ICurrentUserService currentUserService,
             IPlayerRepository playerRepository,
-            IMembershipRepository membershipRepository)
+            IMembershipRepository membershipRepository,
+            IClubRepository clubRepository)
         {
             _joinRequestRepository = joinRequestRepository;
             _context = context;
@@ -36,12 +38,19 @@ namespace CricArena.Business.Services
             _currentUserService = currentUserService;
             _playerRepository = playerRepository;
             _membershipRepository = membershipRepository;
+            _clubRepository = clubRepository;
         }
         public async Task<JoinRequestResponse> CreateAsync(CreateJoinRequestRequest request)
         {
             if (request.ClubId == Guid.Empty)
             {
                 throw new ArgumentException("ClubId cannot be empty.");
+            }
+
+            var club = await _clubRepository.GetByIdAsync(request.ClubId);
+            if (club == null)
+            {
+                throw new ClubNotFoundException(request.ClubId);
             }
 
             var userId = _currentUserService.UserId;
@@ -54,11 +63,18 @@ namespace CricArena.Business.Services
             var player = await _playerRepository.GetPlayerByUserIdAsync(userId.Value);
             var playerId = player?.Id ?? throw new PlayerNotFoundException(player?.Id ?? Guid.Empty);
 
-            var existingRequest = await _joinRequestRepository.GetByClubIdAndPlayerIdAsync(request.ClubId, playerId);
-            if (existingRequest != null)
+            var existingMembership = await _membershipRepository.GetByClubAndPlayerAsync(request.ClubId, playerId);
+            if (existingMembership != null)
             {
                 throw new InvalidOperationException(
-                    $"A join request for ClubId: {request.ClubId} and PlayerId: {playerId} already exists.");
+                    "You are already a member of this club.");
+            }
+
+            var pendingRequest = await _joinRequestRepository.GetPendingByClubIdAndPlayerIdAsync(request.ClubId, playerId);
+            if (pendingRequest != null)
+            {
+                throw new InvalidOperationException(
+                    "You already have a pending join request for this club.");
             }
 
             _logger.LogInformation("Creating join request for ClubId: {ClubId}", request.ClubId);
@@ -131,6 +147,15 @@ namespace CricArena.Business.Services
             {
                 throw new InvalidOperationException(
                     $"Join request with ID: {requestId} cannot be approved. Current status: {joinRequest.Status}");
+            }
+
+            var existingMembership = await _membershipRepository.GetByClubAndPlayerAsync(
+                joinRequest.ClubId,
+                joinRequest.PlayerId);
+            if (existingMembership != null)
+            {
+                throw new InvalidOperationException(
+                    "The player is already a member of this club.");
             }
 
             var (isAssociated, role) = await IsAssociatedWithClub(joinRequest.ClubId);
@@ -233,17 +258,12 @@ namespace CricArena.Business.Services
             {
                 throw new JoinRequestNotFoundException(requestId);
             }
-            if (joinRequest.Status == MembershipStatus.Approved || joinRequest.Status == MembershipStatus.Rejected)
-            {
-                throw new InvalidOperationException(
-                    $"Join request with ID: {requestId} cannot be canceled as it has already been approved.");
-            }
             if (joinRequest.PlayerId != playerId)
             {
                 throw new UnauthorizedAccessException(
                     "The authenticated user is not authorized to cancel this join request.");
             }
-            if (joinRequest.Status == MembershipStatus.Pending || joinRequest.Status == MembershipStatus.Rejected)
+            if (joinRequest.Status != MembershipStatus.Pending)
             {
                 throw new InvalidOperationException(
                     $"Join request with ID: {requestId} cannot be canceled. Current status: {joinRequest.Status}");

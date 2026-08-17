@@ -236,16 +236,8 @@ namespace CricArena.Business.Services
                 throw new MembershipNotFoundException(clubId, playerId);
             }
 
-            var updatedMembership = new Membership
-            {
-                Id = membership.Id,
-                ClubId = membership.ClubId,
-                PlayerId = membership.PlayerId,
-                Role = request.Role,
-                JoinedOn = membership.JoinedOn,
-                Status = membership.Status,
-            };
-            await _membershipRepository.UpdateAsync(updatedMembership);
+            membership.Role = request.Role;
+            await _membershipRepository.UpdateAsync(membership);
             await _dbContext.SaveChangesAsync();
         }
 

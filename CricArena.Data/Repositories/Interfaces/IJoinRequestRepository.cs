@@ -8,6 +8,7 @@ namespace CricArena.Data.Repositories.Interfaces
         Task<List<JoinRequest>> GetByClubIdAsync(Guid clubId);
 
         Task<JoinRequest?> GetByClubIdAndPlayerIdAsync(Guid clubId, Guid playerId);
+        Task<JoinRequest?> GetPendingByClubIdAndPlayerIdAsync(Guid clubId, Guid playerId);
         Task<JoinRequest> AddAsync(JoinRequest joinRequest);
         Task UpdateAsync(JoinRequest joinRequest);
         Task DeleteAsync(JoinRequest joinRequest);
